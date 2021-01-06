@@ -28,7 +28,7 @@ router.post(
       const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number, 
     company, company_name, volunteer, active, access_level_id) 
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true, 3) 
-    RETURNING id`;
+    RETURNING id;`;
       pool
         .query(queryText, [
           username,
@@ -48,11 +48,11 @@ router.post(
           for (let i = 0; i < req.body.activity_id.length; i++) {
             // looping through activity type array as they can select multiple
 
-            const insertOrgQuery = `INSERT INTO "user_activity" ("activity_type_id", "user_id")
+            const insertUserActivityQuery = `INSERT INTO "user_activity" ("activity_type_id", "user_id")
           VALUES ($1, $2);`;
 
             userToActivity.push(
-              pool.query(insertOrgQuery, [
+              pool.query(insertUserActivityQuery, [
                 parseInt(req.body.activity_id[i]),
                 parseInt(newUserId),
               ])
@@ -62,7 +62,7 @@ router.post(
           const userToAges = [];
           // for loop for age ranges query
           for (let i = 0; i < req.body.ages_id.length; i++) {
-            // looping through ages_id array for the multiselect
+            // looping through ages_id array for the multi-select
 
             const insertAgeQuery = `INSERT INTO "user_ages" ("user_id", "ages_id")
           VALUES ($1, $2);`;
@@ -119,14 +119,14 @@ router.post(
         ])
         .then((result) => {
           const newUserId = result.rows[0].id;
-          const userToOrg = [];
 
           const insertOrgQuery = `INSERT INTO "organization" ("organization_name", "contact_title", "address", "mission",
           "summary", "website", "organization_type", "user_id")
           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
           RETURNING id;`;
-          userToOrg.push(
-            pool.query(insertOrgQuery, [
+
+          pool
+            .query(insertOrgQuery, [
               req.body.organization_name,
               req.body.contact_title,
               req.body.address,
@@ -136,31 +136,30 @@ router.post(
               req.body.organization_type,
               parseInt(newUserId),
             ])
-          );
-          Promise.all(userToOrg).then((resultOrg) => {
-            const newOrgId = resultOrg.rows[0].id;
-            const orgToCauses = [];
+            .then((resultOrg) => {
+              const newOrgId = resultOrg.rows[0].id;
+              const orgToCauses = [];
 
-            // for loop for org_causes query
-            for (let i = 0; i < req.body.causes.length; i++) {
-              // req.body.causes should be an array [1, 2, 3]
+              // for loop for org_causes query
+              for (let i = 0; i < req.body.causes.length; i++) {
+                // req.body.causes should be an array [1, 2, 3]
 
-              const insertCausesQuery = `INSERT INTO "org_causes" ("org_id", "cause_id")
+                const insertCausesQuery = `INSERT INTO "org_causes" ("org_id", "cause_id")
               VALUES ($1, $2);`;
 
-              orgToCauses.push(
-                pool.query(insertCausesQuery, [
-                  parseInt(newOrgId),
-                  parseInt(req.body.causes[i]),
-                ])
-              );
-            }
+                orgToCauses.push(
+                  pool.query(insertCausesQuery, [
+                    parseInt(newOrgId),
+                    parseInt(req.body.causes[i]),
+                  ])
+                );
+              }
 
-            // Using Promise.all to require all results returned before moving on
-            Promise.all(orgToCauses).then((result) => {
-              res.sendStatus(201);
+              // Using Promise.all to require all results returned before moving on
+              Promise.all(orgToCauses).then((result) => {
+                res.sendStatus(201);
+              });
             });
-          });
         });
     } catch (err) {
       console.log(`Error saving user to database: ${err}`);
