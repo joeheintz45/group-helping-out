@@ -23,12 +23,11 @@ router.post(
       const phone_number: string | null = <string>req.body.phone_number;
       const company: boolean | null = <boolean>req.body.company;
       const company_name: string | null = <string>req.body.company_name;
-      const non_profit: boolean | null = <boolean>req.body.non_profit;
-      const active: boolean | null = <boolean>req.body.active;
+      const volunteer: boolean | null = <boolean>req.body.volunteer;
 
       const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number, 
-    company, company_name, non_profit, active, access_level_id) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 3) 
+    company, company_name, volunteer, active, access_level_id) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, true, 3) 
     RETURNING id`;
       pool
         .query(queryText, [
@@ -40,8 +39,7 @@ router.post(
           phone_number,
           company,
           company_name,
-          non_profit,
-          active,
+          volunteer,
         ])
         .then((result) => {
           const newUserId = result.rows[0].id;
@@ -89,67 +87,87 @@ router.post(
   }
 );
 
-// router.post(
-//   '/register/org',
-//   (req: Request, res: Response, next: express.NextFunction): void => {
-//     try {
-//       const username: string | null = <string>req.body.username;
-//       const password: string | null = encryptPassword(req.body.password);
-//       const first_name: string | null = <string>req.body.first_name;
-//       const last_name: string | null = <string>req.body.last_name;
-//       const email_address: string | null = <string>req.body.email_address;
-//       const phone_number: string | null = <string>req.body.phone_number;
-//       const company: boolean | null = <boolean>req.body.company;
-//       const company_name: string | null = <string>req.body.company_name;
-//       const non_profit: boolean | null = <boolean>req.body.non_profit;
-//       const active: boolean | null = <boolean>req.body.active;
-//       const access_level: number | null = <number>req.body.access_level;
+router.post(
+  '/register/org',
+  (req: Request, res: Response, next: express.NextFunction): void => {
+    try {
+      const username: string | null = <string>req.body.username;
+      const password: string | null = encryptPassword(req.body.password);
+      const first_name: string | null = <string>req.body.first_name;
+      const last_name: string | null = <string>req.body.last_name;
+      const email_address: string | null = <string>req.body.email_address;
+      const phone_number: string | null = <string>req.body.phone_number;
+      const company: boolean | null = <boolean>req.body.company;
+      const company_name: string | null = <string>req.body.company_name;
+      const volunteer: boolean | null = <boolean>req.body.volunteer;
 
-//       const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number,
-//       company, company_name, non_profit, active, access_level)
-//       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-//       RETURNING id;`;
-//       pool
-//         .query(queryText, [
-//           username,
-//           password,
-//           first_name,
-//           last_name,
-//           email_address,
-//           phone_number,
-//           company,
-//           company_name,
-//           non_profit,
-//           active,
-//           access_level,
-//         ])
-//         .then((result) => {
-//           const newUserId = result.rows[0].id;
-//           const userToOrg = [];
+      const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number, 
+    company, company_name, volunteer, active, access_level_id) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, false, 2) 
+    RETURNING id;`;
+      pool
+        .query(queryText, [
+          username,
+          password,
+          first_name,
+          last_name,
+          email_address,
+          phone_number,
+          company,
+          company_name,
+          volunteer,
+        ])
+        .then((result) => {
+          const newUserId = result.rows[0].id;
+          const userToOrg = [];
 
-//           const insertOrgQuery = `INSERT INTO "organization" ("organization_name", "contact_title", "address", "mission",
-//           "summary", "website", "organization_type", "user_id")
-//           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-//           `;
-//           userToOrg.push(
-//             pool.query(insertOrgQuery, [
-//               req.body.organization_name,
-//               req.body.contact_title,
-//               req.body.address,
-//               req.body.mission,
-//               req.body.summary,
-//               req.body.website,
-//               req.body.organization_type,
-//               newUserId
-//             ])
-//           )
-//         });
-//     } catch (err) {
-//       console.log(`Error saving user to database: ${err}`);
-//       res.sendStatus(500);
-//     }
-//   }
-// );
+          const insertOrgQuery = `INSERT INTO "organization" ("organization_name", "contact_title", "address", "mission",
+          "summary", "website", "organization_type", "user_id")
+          VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+          RETURNING id;`;
+          userToOrg.push(
+            pool.query(insertOrgQuery, [
+              req.body.organization_name,
+              req.body.contact_title,
+              req.body.address,
+              req.body.mission,
+              req.body.summary,
+              req.body.website,
+              req.body.organization_type,
+              parseInt(newUserId),
+            ])
+          );
+          Promise.all(userToOrg).then((resultOrg) => {
+            const newOrgId = resultOrg.rows[0].id;
+            const orgToCauses = [];
+
+            // for loop for org_causes query
+            for (let i = 0; i < req.body.causes.length; i++) {
+              // req.body.causes should be an array [1, 2, 3]
+
+              const insertCausesQuery = `INSERT INTO "org_causes" ("org_id", "cause_id")
+              VALUES ($1, $2);`;
+
+              orgToCauses.push(
+                pool.query(insertCausesQuery, [
+                  parseInt(newOrgId),
+                  parseInt(req.body.causes[i]),
+                ])
+              );
+            }
+
+            // Using Promise.all to require all results returned before moving on
+            Promise.all(orgToCauses).then((result) => {
+              res.sendStatus(201);
+            });
+          });
+        });
+    } catch (err) {
+      console.log(`Error saving user to database: ${err}`);
+      res.sendStatus(500);
+    }
+  }
+);
 
 router.post(
   '/login',
