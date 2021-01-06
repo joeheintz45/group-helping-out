@@ -45,6 +45,7 @@ router.post(
           const newUserId = result.rows[0].id;
           const userToActivity = [];
 
+          // for loop for activity query
           for (let i = 0; i < req.body.activity_id.length; i++) {
             // looping through activity type array as they can select multiple
 
