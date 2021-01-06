@@ -27,8 +27,8 @@ router.post(
       const active: boolean | null = <boolean>req.body.active;
 
       const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number, 
-    company, company_name, non_profit, active, access_level) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 30) 
+    company, company_name, non_profit, active, access_level_id) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 3) 
     RETURNING id`;
       pool
         .query(queryText, [
