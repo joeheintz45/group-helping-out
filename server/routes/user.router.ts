@@ -14,86 +14,140 @@ router.get('/', rejectUnauthenticated, (req: Request, res: Response): void => {
 router.post(
   '/register/vol',
   (req: Request, res: Response, next: express.NextFunction): void => {
-    const username: string | null = <string>req.body.username;
-    const password: string | null = encryptPassword(req.body.password);
-    const first_name: string | null = <string>req.body.first_name;
-    const last_name: string | null = <string>req.body.last_name;
-    const email_address: string | null = <string>req.body.email_address;
-    const phone_number: string | null = <string>req.body.phone_number;
-    const company: boolean | null = <boolean>req.body.company;
-    const company_name: string | null = <string>req.body.company_name;
-    const non_profit: boolean | null = <boolean>req.body.non_profit;
-    const active: boolean | null = <boolean>req.body.active;
-    const access_level: number | null = <number>req.body.access_level;
+    try {
+      const username: string | null = <string>req.body.username;
+      const password: string | null = encryptPassword(req.body.password);
+      const first_name: string | null = <string>req.body.first_name;
+      const last_name: string | null = <string>req.body.last_name;
+      const email_address: string | null = <string>req.body.email_address;
+      const phone_number: string | null = <string>req.body.phone_number;
+      const company: boolean | null = <boolean>req.body.company;
+      const company_name: string | null = <string>req.body.company_name;
+      const non_profit: boolean | null = <boolean>req.body.non_profit;
+      const active: boolean | null = <boolean>req.body.active;
 
-    const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number, 
+      const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number, 
     company, company_name, non_profit, active, access_level) 
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) 
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 30) 
     RETURNING id`;
-    pool
-      .query(queryText, [
-        username,
-        password,
-        first_name,
-        last_name,
-        email_address,
-        phone_number,
-        company,
-        company_name,
-        non_profit,
-        active,
-        access_level,
-      ])
-      .then(() => res.sendStatus(201))
-      .catch((err) => {
-        console.log(`Error saving user to database: ${err}`);
-        res.sendStatus(500);
-      });
+      pool
+        .query(queryText, [
+          username,
+          password,
+          first_name,
+          last_name,
+          email_address,
+          phone_number,
+          company,
+          company_name,
+          non_profit,
+          active,
+        ])
+        .then((result) => {
+          const newUserId = result.rows[0].id;
+          const userToActivity = [];
+
+          for (let i = 0; i < req.body.activity_id.length; i++) {
+            // looping through activity type array as they can select multiple
+
+            const insertOrgQuery = `INSERT INTO "user_activity" ("activity_type_id", "user_id")
+          VALUES ($1, $2);`;
+
+            userToActivity.push(
+              pool.query(insertOrgQuery, [
+                parseInt(req.body.activity_id[i]),
+                parseInt(newUserId),
+              ])
+            );
+          }
+
+          const userToAges = [];
+          // for loop for age ranges query
+          for (let i = 0; i < req.body.ages_id.length; i++) {
+            // looping through ages_id array for the multiselect
+
+            const insertAgeQuery = `INSERT INTO "user_ages" ("user_id", "ages_id")
+          VALUES ($1, $2);`;
+
+            userToAges.push(
+              pool.query(insertAgeQuery, [
+                parseInt(newUserId),
+                parseInt(req.body.ages_id[i]),
+              ])
+            );
+          }
+          // Using Promise.all to require all results returned before moving on
+          Promise.all(userToActivity);
+          Promise.all(userToAges).then((result) => {
+            res.sendStatus(201);
+          });
+        });
+    } catch (err) {
+      console.log(`Error saving user to database: ${err}`);
+      res.sendStatus(500);
+    }
   }
 );
 
 // router.post(
 //   '/register/org',
 //   (req: Request, res: Response, next: express.NextFunction): void => {
-//     try{
-//     const username: string | null = <string>req.body.username;
-//     const password: string | null = encryptPassword(req.body.password);
-//     const first_name: string | null = <string>req.body.first_name;
-//     const last_name: string | null = <string>req.body.last_name;
-//     const email_address: string | null = <string>req.body.email_address;
-//     const phone_number: string | null = <string>req.body.phone_number;
-//     const company: boolean | null = <boolean>req.body.company;
-//     const company_name: string | null = <string>req.body.company_name;
-//     const non_profit: boolean | null = <boolean>req.body.non_profit;
-//     const active: boolean | null = <boolean>req.body.active;
-//     const access_level_id: number | null = <number>req.body.access_level_id;
+//     try {
+//       const username: string | null = <string>req.body.username;
+//       const password: string | null = encryptPassword(req.body.password);
+//       const first_name: string | null = <string>req.body.first_name;
+//       const last_name: string | null = <string>req.body.last_name;
+//       const email_address: string | null = <string>req.body.email_address;
+//       const phone_number: string | null = <string>req.body.phone_number;
+//       const company: boolean | null = <boolean>req.body.company;
+//       const company_name: string | null = <string>req.body.company_name;
+//       const non_profit: boolean | null = <boolean>req.body.non_profit;
+//       const active: boolean | null = <boolean>req.body.active;
+//       const access_level: number | null = <number>req.body.access_level;
 
-//     const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number,
-//       company, company_name, non_profit, active, access_level_id)
+//       const queryText: string = `INSERT INTO "user" (username, password, first_name, last_name, email_address, phone_number,
+//       company, company_name, non_profit, active, access_level)
 //       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
-//       RETURNING id`;
-//     pool
-//       .query(queryText, [
-//         username,
-//         password,
-//         first_name,
-//         last_name,
-//         email_address,
-//         phone_number,
-//         company,
-//         company_name,
-//         non_profit,
-//         active,
-//         access_level_id,
-//       ])
-//       .then((result) => {
-//         const newUserId = result.rows[0].id;
+//       RETURNING id;`;
+//       pool
+//         .query(queryText, [
+//           username,
+//           password,
+//           first_name,
+//           last_name,
+//           email_address,
+//           phone_number,
+//           company,
+//           company_name,
+//           non_profit,
+//           active,
+//           access_level,
+//         ])
+//         .then((result) => {
+//           const newUserId = result.rows[0].id;
+//           const userToOrg = [];
 
-//       });
-//     }catch(err) {
-//         console.log(`Error saving user to database: ${err}`);
-//         res.sendStatus(500);
-//       };
+//           const insertOrgQuery = `INSERT INTO "organization" ("organization_name", "contact_title", "address", "mission",
+//           "summary", "website", "organization_type", "user_id")
+//           VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+//           `;
+//           userToOrg.push(
+//             pool.query(insertOrgQuery, [
+//               req.body.organization_name,
+//               req.body.contact_title,
+//               req.body.address,
+//               req.body.mission,
+//               req.body.summary,
+//               req.body.website,
+//               req.body.organization_type,
+//               newUserId
+//             ])
+//           )
+//         });
+//     } catch (err) {
+//       console.log(`Error saving user to database: ${err}`);
+//       res.sendStatus(500);
+//     }
 //   }
 // );
 
