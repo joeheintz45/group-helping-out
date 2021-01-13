@@ -14,23 +14,6 @@ img {
   max-width: 100%;
 }
 
-/*
-Red Orange - #FF4D53  
-White - #FFFFFF
-Mud Red - #AC3438
-Mud Red Orange - #ED484D
-Chocolate Red - #5E3334
-*/
-
-/* --------------------------------------------------------------------------------
-Banner
--------------------------------------------------------------------------------- */
-.banner {
-  border: black, solid, 1px;
-  background-color: #ac3438;
-  text-align: center;
-}
-
 /* --------------------------------------------------------------------------------
 Container
 -------------------------------------------------------------------------------- */
@@ -46,10 +29,10 @@ Button
 .btn {
   display: inline-block;
   padding: 10px 20px;
-  border-color: #f6f8f8;
+  border-color: #014041;
   border-width: 1px 1px 3px;
   border-radius: 4px;
-  background-color: #ec4f4f;
+  background-color: #00acb0;
   color: #f8f8f8;
   font-size: 1.1rem;
   outline: 0;
@@ -121,10 +104,6 @@ Form Treatment
   background-color: #efefef;
   border-radius: 3px;
   box-shadow: 0 1px 2px rgb(0, 0, 0, 0.4);
-}
-
-.formPanel_wide {
-  width: 80%;
 }
 
 input {

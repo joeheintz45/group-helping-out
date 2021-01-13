@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import mapStoreToProps from '../../redux/mapStoreToProps';
 
 // CUSTOM COMPONENTS
-import RegisterForm from '../../components/OrganizationForm/OrganizationForm';
+import RegisterForm from '../RegisterForm/RegisterForm';
 
-class RegisterVolunteer extends Component {
+class RegisterPage extends Component {
   state = {
     username: '',
     password: '',
@@ -14,7 +14,7 @@ class RegisterVolunteer extends Component {
   render() {
     return (
       <div>
-        {/* TODO need to create volunteer form */}
+        <RegisterForm />
 
         <center>
           <button
@@ -32,4 +32,4 @@ class RegisterVolunteer extends Component {
   }
 }
 
-export default connect(mapStoreToProps)(RegisterVolunteer);
+export default connect(mapStoreToProps)(RegisterPage);
