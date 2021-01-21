@@ -2,6 +2,7 @@ import { all } from 'redux-saga/effects';
 import loginSaga from './login.saga';
 import registrationSaga from './registration.saga';
 import userSaga from './user.saga';
+<<<<<<< HEAD
 import causesSaga from './causes.saga';
 import activitiesSaga from './activities.saga';
 import agesSaga from './ages.saga';
@@ -10,6 +11,8 @@ import imageUploadSaga from './imageUpload.saga';
 import adminSaga from './admin.saga';
 import orgProfileSaga from './orgProfile.saga';
 import wantToHelpSaga from './wantToHelp.saga';
+=======
+>>>>>>> d2e693511a829d79b76919b1a638040787872045
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
@@ -23,6 +26,7 @@ export default function* rootSaga() {
     loginSaga(), // login saga is now registered
     registrationSaga(),
     userSaga(),
+<<<<<<< HEAD
     causesSaga(),
     activitiesSaga(),
     agesSaga(),
@@ -31,5 +35,7 @@ export default function* rootSaga() {
     adminSaga(),
     orgProfileSaga(),
     wantToHelpSaga(),
+=======
+>>>>>>> d2e693511a829d79b76919b1a638040787872045
   ]);
 }

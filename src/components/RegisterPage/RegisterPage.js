@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import mapStoreToProps from '../../redux/mapStoreToProps';
 
 // CUSTOM COMPONENTS
-import RegisterForm from '../../components/OrganizationForm/OrganizationForm';
+import RegisterForm from '../RegisterForm/RegisterForm';
 
-class RegisterOrganization extends Component {
+class RegisterPage extends Component {
   state = {
     username: '',
     password: '',
@@ -21,4 +21,4 @@ class RegisterOrganization extends Component {
   }
 }
 
-export default connect(mapStoreToProps)(RegisterOrganization);
+export default connect(mapStoreToProps)(RegisterPage);

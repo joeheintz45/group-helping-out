@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import sessionMiddleware from './modules/session-middleware';
 import passport from './strategies/user.strategy';
 import userRouter from './routes/user.router';
+<<<<<<< HEAD
 import postingRouter from './routes/posting.router';
 import activitiesRouter from './routes/activity.router';
 import causesRouter from './routes/causes.router';
@@ -12,6 +13,8 @@ import organizationRouter from './routes/organization.router';
 import eventNotifications from './cronjob/event.notification';
 import imageUrlRouter from './routes/imageUrl.router';
 import volunteerRouter from './routes/volunteer.router';
+=======
+>>>>>>> d2e693511a829d79b76919b1a638040787872045
 
 require('dotenv').config();
 
@@ -32,6 +35,7 @@ app.use(passport.session());
 
 /* Routes */
 app.use('/api/user', userRouter);
+<<<<<<< HEAD
 app.use('/api/postings', postingRouter);
 app.use('/api/activities', activitiesRouter);
 app.use('/api/causes', causesRouter);
@@ -49,6 +53,8 @@ app.use(
   })
 );
 app.use('/api/volunteer', volunteerRouter);
+=======
+>>>>>>> d2e693511a829d79b76919b1a638040787872045
 
 // Serve static files
 app.use(express.static('build'));

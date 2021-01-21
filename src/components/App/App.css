@@ -16,6 +16,7 @@ img {
   max-width: 100%;
 }
 
+<<<<<<< HEAD
 /*
 Red Orange - #FF4D53  
 White - #FFFFFF
@@ -33,6 +34,8 @@ Banner
   color: #ed484d;
 }
 
+=======
+>>>>>>> d2e693511a829d79b76919b1a638040787872045
 /* --------------------------------------------------------------------------------
 Container
 -------------------------------------------------------------------------------- */
@@ -48,10 +51,10 @@ Button
 .btn {
   display: inline-block;
   padding: 10px 20px;
-  border-color: #f6f8f8;
+  border-color: #014041;
   border-width: 1px 1px 3px;
   border-radius: 4px;
-  background-color: #ec4f4f;
+  background-color: #00acb0;
   color: #f8f8f8;
   font-size: 1.1rem;
   outline: 0;
@@ -123,10 +126,6 @@ Form Treatment
   background-color: #efefef;
   border-radius: 3px;
   box-shadow: 0 1px 2px rgb(0, 0, 0, 0.4);
-}
-
-.formPanel_wide {
-  width: 80%;
 }
 
 input {
