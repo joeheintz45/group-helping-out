@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 INSERT INTO "activity_type" ("activity_name")
 VALUES ('Arts & Crafts'),
 ('Canvassing'),
@@ -278,5 +277,3 @@ VALUES (1, 1),
 -- adds an upcoming event to brad's profile page
 INSERT INTO "posting_volunteers" ("posting_id", "user_id", "waiver_agreement")
 VALUES (7, 2, true);
-=======
->>>>>>> d2e693511a829d79b76919b1a638040787872045

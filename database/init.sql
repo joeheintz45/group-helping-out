@@ -2,12 +2,28 @@
 -- You must use double quotes in every query that user is in:
 -- ex. SELECT * FROM "user";
 -- Otherwise you will have errors!
+
+-- CREATE TABLE "user" (
+--     "id" SERIAL PRIMARY KEY,
+--     "username" VARCHAR (80) UNIQUE NOT NULL,
+--     "password" VARCHAR (1000) NOT NULL
+-- );
+ 
+
 CREATE TABLE "user" (
-    "id" SERIAL PRIMARY KEY,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
+  "id" SERIAL PRIMARY KEY,
+  "username" VARCHAR (80) UNIQUE NOT NULL,
+  "password" VARCHAR (1000) NOT NULL,
+  "first_name" VARCHAR (40),
+  "last_name" VARCHAR (40),
+  "email_address" VARCHAR (40),
+  "phone_number" VARCHAR (40),
+  "company" BOOLEAN,
+  "company_name" VARCHAR (40),
+  "volunteer" BOOLEAN,
+  "active" BOOLEAN,
+  "access_level_id" INT
 );
-<<<<<<< HEAD
 
 CREATE TABLE "access_level" (
   "id" SERIAL PRIMARY KEY,
@@ -161,5 +177,3 @@ add constraint org_causes_org_id_fkey
 	foreign key ("org_id")
 	references "organization"(id)
 	ON DELETE CASCADE;
-=======
->>>>>>> d2e693511a829d79b76919b1a638040787872045
