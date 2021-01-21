@@ -16,7 +16,7 @@ To streamline the volunteering process, a volunteer can browse a complete list o
 
 ## Preview of Application Pages
 
-![](Kairos.gif)
+### ![](Kairos.gif)
 
 ## Prerequisites
 
