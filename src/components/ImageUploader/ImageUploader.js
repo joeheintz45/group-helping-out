@@ -24,6 +24,7 @@ class ImageUploader extends Component {
       //signingURLQueryParams: { uploadType: 'avatar' },
     };
 
+    // !! Change kairos-images-bucket to the new bucket name !!
     const s3Url = 'https://kairos-images-bucket.s3.amazonaws.com';
 
     const innerEl = (
