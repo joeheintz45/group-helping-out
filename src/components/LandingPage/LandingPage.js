@@ -1,15 +1,36 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import mapStoreToProps from '../../redux/mapStoreToProps';
+import { Grid, Card, Paper, Box, CardContent } from '@material-ui/core';
+import { makeStyles, withStyles, createStyles } from '@material-ui/core/styles';
 
 import './LandingPage.css';
 
 // CUSTOM COMPONENTS
-import RegisterForm from '../RegisterForm/RegisterForm';
+import RegButtons from '../../components/RegButtons/RegButtons';
+
+// Material-UI styles
+const muiStyles = (theme) =>
+  createStyles({
+    root: {
+      minWidth: 275,
+    },
+    bullet: {
+      display: 'inline-block',
+      margin: '0 2px',
+      transform: 'scale(0.8)',
+    },
+    title: {
+      fontsize: 14,
+    },
+    pos: {
+      marginBottom: 12,
+    },
+  });
 
 class LandingPage extends Component {
   state = {
-    heading: 'Class Component',
+    heading: 'Welcome to Kairos!',
   };
 
   onLogin = (event) => {
@@ -17,58 +38,52 @@ class LandingPage extends Component {
   };
 
   render() {
+    const { classes } = this.props;
+
     return (
       <div className="container">
-        <h2>{this.state.heading}</h2>
+        <h1 className="heading-lp">
+          Welcome to <span className="heading-kairos">Kairos!</span>
+        </h1>
+        <Grid container justify="center" spacing={3}>
+          <Grid item xs={12} md={10}>
+            <Paper>
+              <Box p={3}>
+                <RegButtons />
+              </Box>
+            </Paper>
+          </Grid>
+        </Grid>
 
-        <div className="grid">
-          <div className="grid-col grid-col_8">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur
-              id felis metus. Vestibulum et pulvinar tortor. Morbi pharetra
-              lacus ut ex molestie blandit. Etiam et turpis sit amet risus
-              mollis interdum. Suspendisse et justo vitae metus bibendum
-              fringilla sed sed justo. Aliquam sollicitudin dapibus lectus,
-              vitae consequat odio elementum eget. Praesent efficitur eros vitae
-              nunc interdum, eu interdum justo facilisis. Sed pulvinar nulla ac
-              dignissim efficitur. Quisque eget eros metus. Vestibulum bibendum
-              fringilla nibh a luctus. Duis a sapien metus.
-            </p>
-
-            <p>
-              Praesent consectetur orci dui, id elementum eros facilisis id. Sed
-              id dolor in augue porttitor faucibus eget sit amet ante. Nunc
-              consectetur placerat pharetra. Aenean gravida ex ut erat commodo,
-              ut finibus metus facilisis. Nullam eget lectus non urna rhoncus
-              accumsan quis id massa. Curabitur sit amet dolor nisl. Proin
-              euismod, augue at condimentum rhoncus, massa lorem semper lacus,
-              sed lobortis augue mi vel felis. Duis ultrices sapien at est
-              convallis congue.
-            </p>
-
-            <p>
-              Fusce porta diam ac tortor elementum, ut imperdiet metus volutpat.
-              Suspendisse posuere dapibus maximus. Aliquam vitae felis libero.
-              In vehicula sapien at semper ultrices. Vivamus sed feugiat libero.
-              Sed sagittis neque id diam euismod, ut egestas felis ultricies.
-              Nullam non fermentum mauris. Sed in enim ac turpis faucibus
-              pretium in sit amet nisi.
-            </p>
-          </div>
-          <div className="grid-col grid-col_4">
-            <RegisterForm />
-
-            <center>
-              <h4>Already a Member?</h4>
-              <button className="btn btn_sizeSm" onClick={this.onLogin}>
-                Login
-              </button>
-            </center>
-          </div>
-        </div>
+        <Box mt={4}>
+          <Grid container spacing={3} justify="center">
+            <Grid item xs={5}>
+              <img src="volunteer.jpg" />
+            </Grid>
+            <Grid item xs={5}>
+              <Card>
+                <CardContent>
+                  <p>
+                    Maybe it’s because I like everything to be super organized,
+                    but I love when nonprofit websites have a Get Involved
+                    section. There’s something to be said for giving people
+                    options, and for keeping them all in one place. It makes
+                    life so much easier. Basically, the mission is the purpose
+                    for which the agency exists. It is not a list of what you do
+                    but is rather a declaration of what you want to accomplish
+                    (e.g., eradicate hunger in our community, end violence among
+                    our youth). Being clear about the organization’s mission is
+                    critical to deciding how volunteers will be involved to
+                    support that mission.
+                  </p>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
       </div>
     );
   }
 }
 
-export default connect(mapStoreToProps)(LandingPage);
+export default connect(mapStoreToProps)(withStyles(muiStyles)(LandingPage));
